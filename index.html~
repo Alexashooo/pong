@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id='b' width='1440' height='700' style="border:1px dotted blue;"  ></canvas>
+
+<script src="scripting.js"></script>
+
+</body>
+
+</html>
+
+
+
