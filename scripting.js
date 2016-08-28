@@ -69,7 +69,7 @@
  	var player = new Paddle(250, 15, 10, 70);
  	var com = new Paddle(1154, 15, 10, 70);
  	var ball = new Ball(700, 380, 10);
- 	var table = new Table(200, 5, 1014, 690);
+ 	var table = new Table(200, 5, 1010, 690);
  
  
  	//"Master" render function
