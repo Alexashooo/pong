@@ -1,4 +1,4 @@
-  	 
+ 
   	 var table_canvas = document.getElementById("b");
   	 var table_context = this.table_canvas.getContext("2d");
   	 var movement_step = 0;
@@ -19,13 +19,14 @@
 	     };
 	     
 	     this.render = function() {
-	        table_context.beginPath();
-           table_context.rect(this.x_position, this.y_position, this.paddle_width, this.paddle_length);
-           table_context.fillStyle = 'red';
-           table_context.fill();
-           table_context.lineWidth = 7;
-           table_context.strokeStyle = 'red';
-           table_context.stroke();
+	        //table_context.beginPath();
+	        table_context.fillStyle = 'red';
+           table_context.fillRect(this.x_position, this.y_position, this.paddle_width, this.paddle_length);
+           
+           //table_context.fill();
+           //table_context.lineWidth = 7;
+           //table_context.strokeStyle = 'red';
+           //table_context.stroke();
 	     };
 	};
 	
@@ -74,8 +75,9 @@
  
  	//"Master" render function
  	
+ 	table.render();
  	var render = function() {
- 		table.render();
+ 		
     	player.render();
     	com.render();
     	ball.render(); 
@@ -99,7 +101,7 @@
  	
   var step = function() {
   	   	render();
-  	   	window.requestAnimationFrame(step);   
+  	   	animate(step);   
   };
 
  
