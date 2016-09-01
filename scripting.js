@@ -13,7 +13,7 @@
 	     this.paddle_length = plength;
 	     
 	     this.move = function(){
-	     	  if((this.y_position > this.paddle_length/2 && movement_step_paddle < 0) || (this.y_position < (table.table_length+table.top_margin-this.paddle_length-15)  && movement_step_paddle >0)){
+	     	  if((this.y_position > this.paddle_length/2 && movement_step_paddle < 0) || (this.y_position < (table.table_length-table.top_margin-100)  && movement_step_paddle >0)){
 	     	  	       this.y_position = this.y_position + movement_step_paddle; 
 	     	  }  	         
 	     };
@@ -63,7 +63,7 @@
 	     
 	     this.move = function(){	
 	     	 //reflection angle 
-	     	 //if(this.reflection_angle(45)=== 45){
+	     	 if(this.reflection_angle(45)=== 45){
              
 	     	 		//collision with table top
 	     	 		//left to right
@@ -154,22 +154,31 @@
              
                     // serve again
                    
-                    else if(ball.x_position ===(player.x_position+player.paddle_width) && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length) && this.x_direction < 0 && this.y_direction > 0) {
-                          start_counter--;
+                    else if(ball.x_position ===(player.x_position+player.paddle_width) && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length)) {
+                          start_counter--;     
                     }
-                    
                    
-                    else if(ball.x_position===(player.x_position+player.paddle_width) && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length) && this.x_direction < 0 && this.y_direction < 0) {
-                         start_counter--;
+                    else if(ball.x_position===(player.x_position+player.paddle_width) && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length)) {
+                         start_counter--;    
+                    }
+             
+                    else if(ball.x_position ===com.x_position && (ball.y_position < com.y_position || ball.y_position > com.y_position + com.paddle_length)) {
+                          start_counter--;     
+                    }
+                   
+                    else if(ball.x_position===player.x_position && (ball.y_position < com.y_position || ball.y_position > com.y_position + com.paddle_length)) {
+                         start_counter--;    
                     }
 	     			  		 
-	       //}
+	       }
 	     };
 	     
 	     this.serve_the_ball = function() {
+               ball.x_position=500;
+               ball.y_position=380;
                render();
-               this.y_direction = this.y_direction * this.direction_correction;
-               this.x_direction = this.x_direction * this.direction_correction;
+               this.y_direction = Math.abs(this.y_direction);
+               this.x_direction = Math.abs(this.x_direction);
 	     };
 	     
 	};
@@ -194,7 +203,7 @@
  	// start positions of all objects
  	
  	var player = new Paddle(250, 10, 10, 70);
- 	var com = new Paddle(1154, 350, 10, 70);
+ 	var com = new Paddle(1154, 10, 10, 70);
  	var ball = new Ball(700, 380, 10);
  	var table = new Table(200, 0, 1010, 690);
  
@@ -227,7 +236,7 @@
 window.addEventListener("keydown", function(event){
  	  			if(event.keyCode==80 || event.which ==80) {
  	  	  			 movement_step_paddle= -50;
- 	  	   		 com.move();
+ 	  	   		     com.move();
  	  			} 
  	  			else if(event.keyCode==76 || event.which==76) {
  	  				movement_step_paddle= 50;
@@ -240,15 +249,17 @@ window.addEventListener("keydown", function(event){
  
  var step = function() {	   
          if(start_counter===0){
-             ball.serve_the_ball();
+             setTimeout(ball.serve_the_ball(), 4000);
              start_counter++;
+            
          }
          else{
             ball.move();
-            render();     
+            render(); 
+        
          };
           	   	
-  	   	window.requestAnimationFrame(step);   
+  	   	requestAnimationFrame(step);   
   };
 
  
@@ -261,11 +272,12 @@ window.addEventListener("keydown", function(event){
         window.mozRequestAnimationFrame    ||
         window.oRequestAnimationFrame      ||
         window.msRequestAnimationFrame     ||
-        function(callback) { window.setTimeout(callback, 1000/60) };
+        requestAnimationFrame(animate);
  	
  	    
  window.onload = animate(step);
 	
+
 	
 	
 	
