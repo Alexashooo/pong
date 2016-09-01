@@ -1,4 +1,4 @@
-  	 
+   	 
   	 var table_canvas = document.getElementById("b");
   	 var table_context = this.table_canvas.getContext("2d");
   	 
@@ -19,7 +19,7 @@
 	     };
 	     
 	     this.render = function() {
-	        table_context.beginPath();
+	       table_context.beginPath();
            table_context.rect(this.x_position, this.y_position, this.paddle_width, this.paddle_length);
            table_context.fillStyle = 'red';
            table_context.fill();
@@ -29,7 +29,7 @@
 	     };
 	};
 	  
-	
+	// movement and the speed of the ball at te same time
 	var movement_step_ball = 2;
 		
 	
@@ -40,99 +40,148 @@
 	     this.y_position = ypos;
 	     this.ball_radius = bradius;
 	     this.counterClockwise = false;
+         this.direction_correction = -1;
+         this.y_direction = 1;
+         this.x_direction = 1;
+         this.line_width = 1;
 	     
 	     this.render = function() {
-	        table_context.beginPath();
+	       table_context.beginPath();
            table_context.arc(this.x_position, this.y_position, this.ball_radius = bradius, 0, 2 * Math.PI, this.counterClockwise);
-           table_context.lineWidth = 4;
+           table_context.lineWidth = this.line_width;
+           table_context.fillStyle = 'red';
+           table_context.fill();
            table_context.strokeStyle = 'red';
            table_context.stroke();
 	     };
 	     
-	     // start angle, it should be defined more angles like 15, 30, 60, 75, 90...
+	     // start angle, it should be defined more angles like 30, 60.... 
 	     
 	     this.reflection_angle = function (r_angle){
 	     	    return r_angle;
 	     };
 	     
-	     this.move = function(){
-	     	 //alert(ball_x_previous_pos + ' ' + ball.x_position + '      ' + ball_y_previous_pos + '   ' +ball.y_position);	
+	     this.move = function(){	
 	     	 //reflection angle 
-	     	 if(this.reflection_angle(45)=== 45){
+	     	 //if(this.reflection_angle(45)=== 45){
+             
 	     	 		//collision with table top
 	     	 		//left to right
-	     			 if(this.y_position === table.top_margin +10 && this.x_position > ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 }	
-	     			 //right to left
-	     			 else if(this.y_position === table.top_margin && this.x_position < ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 } 
-	     			 //collision with table bottom
-	     			 //left to right
-	     			 else if (this.y_position === (table.table_length+table.top_margin) && this.x_position > ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 }
-	     			 //right to left
-	     			 else if (this.y_position === (table.table_length+table.top_margin) && this.x_position < ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 }
-	     			 //free movement
-	     			 //left to right and up
-	     			 else if (this.y_position != table.top_margin && this.y_position === (table.table_length+table.top_margin) && this.x_position > ball_x_previous_pos && this.y_position < ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 } 
-	     			 //left to right and down
-	     			 else if (this.y_position != table.top_margin + 10 && this.y_position != (table.table_length+table.top_margin) && this.x_position > ball_x_previous_pos && this.y_position > ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 } 
-	     			 //right to left and up
-	     			 else if (this.y_position != table.top_margin + 10 && this.y_position != (table.table_length+table.top_margin) && this.x_position < ball_x_previous_pos && this.y_position < ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 } 
-	     			 //right to left and down
-	     			 else if (this.y_position != table.top_margin && this.y_position != (table.table_length+table.top_margin) && this.x_position < ball_x_previous_pos && this.y_position < ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 } 
+	     			if(ball.y_position===table.top_margin+ball.ball_radius && this.x_direction > 0 && this.y_direction < 0) {
+                        ball.x_position += movement_step_ball;
+                        ball.y_position += movement_step_ball;
+                        this.y_direction = this.y_direction * this.direction_correction;
+                    }
+               
+                    //collision with table top
+	     	 		//right to left
+                    if(ball.y_position===table.top_margin+ball.ball_radius && this.x_direction < 0 && this.y_direction < 0) {
+                        ball.x_position -= movement_step_ball;
+                        ball.y_position += movement_step_ball;
+                        this.y_direction = this.y_direction * this.direction_correction;
+                    }
+             
+                    // free movement from left to right and up
+                    else if(ball.y_position != table.top_margin+ball.ball_radius && ball.y_position!=table.top_margin+table.table_length - ball.ball_radius && this.x_direction > 0 && this.y_direction < 0 && ball.x_position-ball.ball_radius != player.x_position && ball.x_position!=com.x_position){
+                        ball.x_position += movement_step_ball;
+                        ball.y_position -= movement_step_ball;
+                    }
+                    // free movement from left to right and down
+                    else if(ball.y_position != table.top_margin+ball.ball_radius && ball.y_position!=table.top_margin+table.table_length - ball.ball_radius && this.x_direction > 0 && this.y_direction > 0 && ball.x_position-ball.ball_radius != player.x_position && ball.x_position!=com.x_position){
+                        ball.x_position += movement_step_ball;
+                        ball.y_position += movement_step_ball;
+                    }
+                    
+                    // free movement from right to left and up
+                    else if(ball.y_position != table.top_margin+ball.ball_radius && ball.y_position!=table.top_margin+table.table_length - ball.ball_radius && this.x_direction < 0 && this.y_direction < 0 && ball.x_position-ball.ball_radius != player.x_position && ball.x_position!=com.x_position){
+                        ball.x_position -= movement_step_ball;
+                        ball.y_position -= movement_step_ball;
+                    }
+             
+                    // free movement from right to left and down
+                    else if(ball.y_position != table.top_margin+ball.ball_radius && ball.y_position!=table.top_margin+table.table_length - ball.ball_radius && this.x_direction < 0 && this.y_direction > 0 && ball.x_position-ball.ball_radius != player.x_position && ball.x_position!=com.x_position){
+                        ball.x_position -= movement_step_ball;
+                        ball.y_position += movement_step_ball;
+                    }
+             
+                    //collision with table bottom
+	     	 		//left to right
+                    else if(ball.y_position===table.top_margin+table.table_length - ball.ball_radius && this.x_direction > 0 && this.y_direction > 0) {
+                        ball.x_position += movement_step_ball;
+                        ball.y_position -= movement_step_ball;
+                        this.y_direction = this.y_direction * this.direction_correction;
+                    }
+               
+                    //collision with table bottom
+	     	 		//right to left
+                    else if(ball.y_position===table.top_margin+table.table_length - ball.ball_radius && this.x_direction < 0 && this.y_direction > 0) {
+                        ball.x_position -= movement_step_ball;
+                        ball.y_position -= movement_step_ball;
+                        this.y_direction = this.y_direction * this.direction_correction;
+                    }
+             
+                    //collision with left(player) paddle
+                    // top to down
+                    else if(ball.x_position===(player.x_position+player.paddle_width) && ball.y_position >= player.y_position && ball.y_position <= player.y_position + player.paddle_length && this.x_direction < 0 && this.y_direction > 0) {
+                        ball.x_position += movement_step_ball;
+                        ball.y_position += movement_step_ball;
+                        this.x_direction = this.x_direction * this.direction_correction;
+                    }
+                    
+                    //collision with left(player) paddle
+                    // down to top
+                    else if(ball.x_position===(player.x_position+player.paddle_width) && ball.y_position >= player.y_position && ball.y_position <= player.y_position + player.paddle_length && this.x_direction < 0 && this.y_direction < 0) {
+                        ball.x_position += movement_step_ball;
+                        ball.y_position -= movement_step_ball;
+                        this.x_direction = this.x_direction * this.direction_correction;
+                    }
+             
+                    //collision with right(com) paddle
+                    // top to down
+                    else if(ball.x_position ===com.x_position && ball.y_position >= com.y_position && ball.y_position <= com.y_position + com.paddle_length && this.x_direction > 0 && this.y_direction > 0) {
+                        ball.x_position -= movement_step_ball;
+                        ball.y_position += movement_step_ball;
+                        this.x_direction = this.x_direction * this.direction_correction;
+                    }
+                    
+                    //collision with right(com) paddle
+                    // down to top
+                    else if(ball.x_position === com.x_position && ball.y_position >= com.y_position && ball.y_position <= com.y_position + com.paddle_length && this.x_direction > 0 && this.y_direction <0) {
+                        ball.x_position -= movement_step_ball;
+                        ball.y_position -= movement_step_ball;
+                        this.x_direction = this.x_direction * this.direction_correction;
+                    }
+             
+                    // serve again
+                   
+                    else if(ball.x_position ===(player.x_position+player.paddle_width) && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length) && this.x_direction < 0 && this.y_direction > 0) {
+                          start_counter--;
+                    }
+                    
+                   
+                    else if(ball.x_position===(player.x_position+player.paddle_width) && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length) && this.x_direction < 0 && this.y_direction < 0) {
+                         start_counter--;
+                    }
 	     			  		 
-	       }
+	       //}
 	     };
 	     
 	     this.serve_the_ball = function() {
-	     		this.x_position = this.x_position + movement_step_ball;
-	     	   this.y_position = this.y_position - movement_step_ball;
+               render();
+               this.y_direction = this.y_direction * this.direction_correction;
+               this.x_direction = this.x_direction * this.direction_correction;
 	     };
 	     
-	     //delete this
-	     this.move_test = function(){
-	     	 ball_x_previous_pos = ball.x_position;
-	       ball_y_previous_pos = ball.y_position;
-	     	 if(this.reflection_angle(45)===45){
-	     	 	if(this.x_position > ball_x_previous_pos){
-	     	  		this.x_position = this.x_position + movement_step_ball;
-	     	  		this.y_position = this.y_position - movement_step_ball;
-	     	  	}
-	     	 }
-	     	 	
-	     };
 	};
 
 
-   //Table object, making table
+   //Table constructor, making table
    
  	function Table(lmargin, tmargin, t_width, t_length) {
  		this.left_margin = lmargin;
  		this.top_margin = tmargin;
- 		this.table_width = t_width;
- 		this.table_length = t_length;
+        this.table_width = t_width;
+ 		this.table_length = t_length;	
  				
   		this.render = function(){
   			table_context.fillStyle="grey"
@@ -142,14 +191,12 @@
  	
  	
  	
- 	// start positions of the paddles (fixed for table, of course)
+ 	// start positions of all objects
  	
- 	var player = new Paddle(250, 15, 10, 70);
- 	var com = new Paddle(1154, 15, 10, 70);
+ 	var player = new Paddle(250, 10, 10, 70);
+ 	var com = new Paddle(1154, 350, 10, 70);
  	var ball = new Ball(700, 380, 10);
- 	var ball_x_previous_pos = ball.x_position;
-	var ball_y_previous_pos = ball.y_position;	
- 	var table = new Table(200, 5, 1010, 690);
+ 	var table = new Table(200, 0, 1010, 690);
  
  
  	//"Master" render function
@@ -166,30 +213,41 @@
  // event listener for Paddle...
  
  window.addEventListener("keydown", function(event){
- 	  			if(event.keyCode==79 || event.which ==79) {
+ 	  			if(event.keyCode==87 || event.which ==87) {
  	  	  			 movement_step_paddle= -50;
  	  	   		 player.move();
  	  			} 
- 	  			else if(event.keyCode==75 || event.which==75) {
+ 	  			else if(event.keyCode==83 || event.which==83) {
  	  				movement_step_paddle= 50;
  	  				player.move();
  	  			}
  });
  	
+
+window.addEventListener("keydown", function(event){
+ 	  			if(event.keyCode==80 || event.which ==80) {
+ 	  	  			 movement_step_paddle= -50;
+ 	  	   		 com.move();
+ 	  			} 
+ 	  			else if(event.keyCode==76 || event.which==76) {
+ 	  				movement_step_paddle= 50;
+ 	  				com.move();
+ 	  			}
+ });
+
+
  var start_counter = 0;
  
- var step = function() {	 
-         do {
-          ball.serve_the_ball();
-          start_counter++;
-         }  
-         while(start_counter===0);
-         ball.move();
-  	   	render();
-  	   	ball_x_previous_pos = ball.x_position;
-	      ball_y_previous_pos = ball.y_position;
-	     
-  	   	
+ var step = function() {	   
+         if(start_counter===0){
+             ball.serve_the_ball();
+             start_counter++;
+         }
+         else{
+            ball.move();
+            render();     
+         };
+          	   	
   	   	window.requestAnimationFrame(step);   
   };
 

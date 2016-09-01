@@ -1,4 +1,4 @@
-  	 
+   	 
   	 var table_canvas = document.getElementById("b");
   	 var table_context = this.table_canvas.getContext("2d");
   	 
@@ -61,47 +61,7 @@
 	     	 if(this.reflection_angle(45)=== 45){
 	     	 		//collision with table top
 	     	 		//left to right
-	     			 if(this.y_position === table.top_margin +10 && this.x_position > ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 }	
-	     			 //right to left
-	     			 else if(this.y_position === table.top_margin && this.x_position < ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 } 
-	     			 //collision with table bottom
-	     			 //left to right
-	     			 else if (this.y_position === (table.table_length+table.top_margin) && this.x_position > ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 }
-	     			 //right to left
-	     			 else if (this.y_position === (table.table_length+table.top_margin) && this.x_position < ball_x_previous_pos) {
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 }
-	     			 //free movement
-	     			 //left to right and up
-	     			 else if (this.y_position != table.top_margin && this.y_position === (table.table_length+table.top_margin) && this.x_position > ball_x_previous_pos && this.y_position < ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 } 
-	     			 //left to right and down
-	     			 else if (this.y_position != table.top_margin + 10 && this.y_position != (table.table_length+table.top_margin) && this.x_position > ball_x_previous_pos && this.y_position > ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position + movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 } 
-	     			 //right to left and up
-	     			 else if (this.y_position != table.top_margin + 10 && this.y_position != (table.table_length+table.top_margin) && this.x_position < ball_x_previous_pos && this.y_position < ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position - movement_step_ball;
-	     			 } 
-	     			 //right to left and down
-	     			 else if (this.y_position != table.top_margin && this.y_position != (table.table_length+table.top_margin) && this.x_position < ball_x_previous_pos && this.y_position < ball_y_previous_pos){
-	     			 	 this.x_position = this.x_position - movement_step_ball;
-	     	   		 this.y_position = this.y_position + movement_step_ball;
-	     			 } 
+	     			
 	     			  		 
 	       }
 	     };
@@ -155,7 +115,7 @@
  	//"Master" render function
  	
  	var render = function() {
- 		//table.render();
+ 		table.render();
     	player.render();
     	com.render();
     	ball.render();
@@ -186,8 +146,8 @@
          while(start_counter===0);
          ball.move();
   	   	render();
-  	   	ball_x_previous_pos = ball.x_position;
-	      ball_y_previous_pos = ball.y_position;
+  	   	//ball_x_previous_pos = ball.x_position;
+	      //ball_y_previous_pos = ball.y_position;
 	     
   	   	
   	   	window.requestAnimationFrame(step);   
