@@ -2,7 +2,8 @@
   	 var table_canvas = document.getElementById("b");
   	 var table_context = this.table_canvas.getContext("2d");
   	 
-  	 var movement_step_paddle = 0;
+  	 var movement_step_paddle_player = 0;
+     var movement_step_paddle_com = 0;
   	 
   	 // Paddle object
   	 function Paddle(xpos, ypos, pwidth, plength) {
@@ -11,10 +12,11 @@
 	     this.y_position = ypos;
 	     this.paddle_width = pwidth;
 	     this.paddle_length = plength;
+         
 	     
-	     this.move = function(){
-	     	  if((this.y_position > this.paddle_length/2 && movement_step_paddle < 0) || (this.y_position < (table.table_length-table.top_margin-100)  && movement_step_paddle >0)){
-	     	  	       this.y_position = this.y_position + movement_step_paddle; 
+	     this.move = function(m_paddle){
+	     	  if((this.y_position > this.paddle_length/2 && m_paddle < 0) || (this.y_position < (table.table_length-table.top_margin-100)  && m_paddle >0)){
+	     	  	       this.y_position = this.y_position + m_paddle; 
 	     	  }  	         
 	     };
 	     
@@ -206,6 +208,22 @@
  	var com = new Paddle(1154, 10, 10, 70);
  	var ball = new Ball(700, 380, 10);
  	var table = new Table(200, 0, 1010, 690);
+
+   
+    //COM player moving akka AI
+
+    var com_delay = 150;  // delay of 150 px before point of impact
+
+    Paddle.prototype.updateComPosition = function() {
+       //while(ball.y_position != this.y_position) {
+            if(ball.x_position >= this.x_position-com_delay && ball.y_position > this.y_position){
+                movement_step_paddle_com++;    
+            }
+            else if(ball.x_position >= this.x_position-com_delay && ball.y_position < this.y_position){
+                movement_step_paddle_com--;
+            }
+       //}
+    };
  
  
  	//"Master" render function
@@ -219,42 +237,45 @@
  	};
  	
  
- // event listener for Paddle...
+ // event listener for player'a paddle...
  
  window.addEventListener("keydown", function(event){
  	  			if(event.keyCode==87 || event.which ==87) {
- 	  	  			 movement_step_paddle= -50;
- 	  	   		 player.move();
+ 	  	  	         movement_step_paddle_player= -50;
+ 	  	   		     player.move(movement_step_paddle_player);
+                     //alert(movement_step_paddle_player);
  	  			} 
  	  			else if(event.keyCode==83 || event.which==83) {
- 	  				movement_step_paddle= 50;
- 	  				player.move();
+ 	  				 movement_step_paddle_player= 50;
+ 	  				 player.move(movement_step_paddle_player);
+                     //alert(movement_step_paddle_player);  
  	  			}
  });
  	
 
-window.addEventListener("keydown", function(event){
- 	  			if(event.keyCode==80 || event.which ==80) {
- 	  	  			 movement_step_paddle= -50;
- 	  	   		     com.move();
- 	  			} 
- 	  			else if(event.keyCode==76 || event.which==76) {
- 	  				movement_step_paddle= 50;
- 	  				com.move();
- 	  			}
- });
+//window.addEventListener("keydown", function(event){
+ 	  			//if(event.keyCode==80 || event.which ==80) {
+ 	  	  			 //movement_step_paddle= -50;
+ 	  	   		    // com.move();
+ 	  			//} 
+ 	  			//else if(event.keyCode==76 || event.which==76) {
+ 	  				//movement_step_paddle= 50;
+ 	  				//com.move();
+ 	  			//}
+ //});
 
 
  var start_counter = 0;
  
  var step = function() {	   
          if(start_counter===0){
-             setTimeout(ball.serve_the_ball(), 4000);
-             start_counter++;
-            
+             setTimeout(ball.serve_the_ball(), 0);
+             start_counter++;           
          }
          else{
             ball.move();
+            com.updateComPosition();
+            com.move(movement_step_paddle_com);
             render(); 
         
          };
@@ -272,7 +293,7 @@ window.addEventListener("keydown", function(event){
         window.mozRequestAnimationFrame    ||
         window.oRequestAnimationFrame      ||
         window.msRequestAnimationFrame     ||
-        requestAnimationFrame(animate);
+        function(callback) { window.setTimeout(step(), 100/60) };
  	
  	    
  window.onload = animate(step);
