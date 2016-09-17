@@ -34,16 +34,16 @@
 	};
 	  
 	// movement and the speed of the ball at te same time
-   var movement_step_ball = 6;
+   var movement_step_ball = 6; 
 	
-   // start angle, it should be defined more angles like 30, 45 and 60.... 
+   // start angle
 	     
    var ax = 0; //angle corection x-axis
    var ay = 0; //angle corection y-axis
 
    var reflection_angle = function (r_angle){
 	     if(r_angle === 30) { 
-             ax=1.5;
+             ax=1.20;
              ay=1;
          }
          else if(r_angle === 45) {
@@ -52,9 +52,40 @@
          }
          else if(r_angle === 60) {
              ax=1;
-             ay=1.5;
+             ay=1.4;
          }
     };
+
+    //result
+    var player_score = 0; 
+    var com_score = 0; 
+ 
+    var show_player_score = document.getElementById("player");
+    show_player_score.style.color = "red";
+    show_player_score.style.fontSize = "900%";
+    show_player_score.style.fontWeight = "900"
+    show_player_score.style.opacity = "0.2";
+    show_player_score.style.position = "absolute";
+    show_player_score.style.left = '431px';
+    show_player_score.style.top = '50px';
+
+
+
+    var show_com_score = document.getElementById("com");
+    show_com_score.style.color = "red";
+    show_com_score.style.fontSize = "900%";
+    show_com_score.style.fontWeight = "900";
+    show_com_score.style.opacity = "0.2";
+    show_com_score.style.position = "absolute";
+    show_com_score.style.left = '571px';
+    show_com_score.style.top = '50px';
+ 
+
+    //d.style.left = x_pos+'px';
+    //d.style.top = y_pos+'px';
+    
+   
+ 
 
 	
 	 // Ball object
@@ -232,13 +263,19 @@
              
                     // serve again
                    
-                    else if(this.x_position === table.left_margin && (this.y_position < player.y_position || this.y_position > player.y_position + player.paddle_length)) {
-                          start_counter--;     
+                    else if(this.x_position - 1 - this.ball_radius  <= 36 && (this.y_position < player.y_position || this.y_position > player.y_position + 1 + player.paddle_length + 1)) {
+                          com_score++;
+                          show_com_score.innerHTML = com_score;
+                          serve_counter--;  
+                          
                     }
                    
              
-                    else if(this.x_position === table.left_margin && (this.y_position < com.y_position || this.y_position > com.y_position + com.paddle_length)) {
-                          start_counter--;     
+                    else if(this.x_position >= 1000 - this.ball_radius - 1  && (this.y_position < com.y_position || this.y_position > com.y_position + 1 + com.paddle_length + 1)) {
+                          player_score++;
+                          show_player_score.innerHTML = player_score;
+                          serve_counter--; 
+                          
                     }
                  
                     else {
@@ -279,12 +316,12 @@
 	     };
 	     
 	     this.serve_the_ball = function() {
-               reflection_angle(60);
-               this.x_position=600;
+               reflection_angle(45);
+               this.x_position=500;
                this.y_position=500;
                render();
-               this.y_direction = -Math.abs(this.y_direction);
-               this.x_direction = -Math.abs(this.y_direction);
+               this.y_direction = Math.abs(this.y_direction);
+               this.x_direction = Math.abs(this.x_direction);
 	     };
 	     
 	};
@@ -314,8 +351,8 @@
  	
  	// start positions of all objects
  	
- 	var player = new Paddle(30, 300, 5, 60);
- 	var com = new Paddle(1005, 300, 5, 60);
+ 	var player = new Paddle(30, 300, 5, 100);
+ 	var com = new Paddle(1005, 300, 5, 100);
  	var ball = new Ball(700, 500, 5);
  	var table = new Table(20, 20, 1000, 600);
   
@@ -329,46 +366,39 @@
     	player.render();
     	com.render();
     	ball.render();
-        renderResult();
  	};
 
 // com movement
-// put safery margins !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! top and down edge on the table...
-var com_delay = 250; 
+var com_delay = 300; 
+var com_stop_react = 5;
 
 Paddle.prototype.comMove = function() {
          
-             if(ball.x_position > this.x_position - com_delay && ball.x_direction > 0 && ball.y_position < this.y_position + this.paddle_length/2){
-                        movement_step_paddle_com = -6;
-                        this.y_position = this.y_position + movement_step_paddle_com; 
+             if(ball.x_position > this.x_position - com_delay && ball.x_position < this.x_position - com_stop_react && (ball.x_direction > 0 || (ball.x_direction < 0 && ball.x_position > this.x_position - 350)) && this.y_position  >= 20 && this.y_position > ball.y_position ){
+                        movement_step_paddle_com = -8;
+                        if  (this.y_position + movement_step_paddle_com < 20) {
+                            this.y_position = 20;
+                        } else {
+                            this.y_position = this.y_position + movement_step_paddle_com; 
+                        }         
               }  
     
               
-              else if( ball.x_position > this.x_position - com_delay && ball.x_direction > 0 && ball.y_position > this.y_position - this.paddle_length/2){
-                        movement_step_paddle_com = 6;
-                        this.y_position = this.y_position + movement_step_paddle_com;    
+              else if( ball.x_position > this.x_position - com_delay && ball.x_position < this.x_position - com_stop_react && (ball.x_direction > 0 || (ball.x_direction < 0 && ball.x_position > this.x_position - 350)) && this.y_position + 1 + this.paddle_length + 1 <= 622 && this.y_position + 1+ this.paddle_length + 1 < ball.y_position ){
+                        movement_step_paddle_com = 8;
+                        if  (this.y_position + this.paddle_length + movement_step_paddle_com > 622) {
+                            this.y_position = 622 - 1 - this.paddle_length - 1;
+                        } else {
+                            this.y_position = this.y_position + movement_step_paddle_com; 
+                        }  
+                         
               }   
     
 };
 
 
-//show or render result
 
-var player_score = 0; 
-var com_score = 0; 
 
-var renderResult = function(){
-    
-    if(ball.x_position === player.x_position+player.paddle_width && (ball.y_position < player.y_position || ball.y_position > player.y_position + player.paddle_length)) {
-                          com_score++; 
-                          document.getElementById("2").innerHTML = com_score;
-    }   
-      
-    else if(ball.x_position === com.x_position && (ball.y_position < com.y_position || ball.y_position > com.y_position + com.paddle_length)) {
-                          player_score++; 
-                          document.getElementById("1").innerHTML = player_score;
-    }    
-}
 
  	
  
@@ -376,11 +406,11 @@ var renderResult = function(){
  
  window.addEventListener("keydown", function(event){
  	  			if(event.keyCode==87 || event.which ==87) {
- 	  	  			 movement_step_paddle_player= -15;
+ 	  	  			 movement_step_paddle_player= -10;
                      player.move();
  	  			} 
  	  			else if(event.keyCode==83 || event.which==83) {
- 	  				 movement_step_paddle_player= 15;
+ 	  				 movement_step_paddle_player= 10;
  	  				 player.move();
  	  			}
  });
@@ -398,25 +428,26 @@ var renderResult = function(){
  //});
 
 
- var start_counter = 0;
+ var serve_counter = 0;
+
  
  var step = function() {	   
-         if(start_counter===0){
-             ball.serve_the_ball();
-             start_counter++;  
+         if(serve_counter===0){
+             //window.addEventListener("keydown", function(event) { 
+                 //if(event.keycode == 32 || event.which == 32) { 
+                    ball.serve_the_ball();
+                    serve_counter++;  
+                 //} 
+             //});
          }
          else{
             com.comMove();
             ball.move();
             render(); 
-            alert(ball.x_position + ' ' +  ball.y_position + ' ' + ball.y_direction);
          };
           	   	
   	   	requestAnimationFrame(step);   
   };
-
- 
-  		
 
  //refreshing window akka animation
  	
