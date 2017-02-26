@@ -4,7 +4,7 @@
 Pong is classic well known game and this is an attempt to recreate with slightly changed rules.
 The application is developed with "vanilla" Javascript and HTML 5 canvas element.
 
-
+![pong_in_action](https://cloud.githubusercontent.com/assets/13839425/23341578/8c202b08-fc4a-11e6-8115-a59585728a05.png)
 
 
 ## Installation
